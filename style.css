@@ -1,0 +1,29 @@
+.main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(116.82deg, #2C9DC1 0%, #E8F2F3 100%) no-repeat;
+}
+
+.today {
+    width: 100%;
+    max-width: 840px;
+    height: 540px;
+
+    margin-bottom: 25px;
+
+    background: linear-gradient(112.45deg, #0995E3 0%, rgba(9, 149, 227, 0.2) 100%) no-repeat;
+    border-radius: 20px;
+}
+
+.week {
+    width: 100%;
+    max-width: 840px;
+    height: 205px;
+
+    background: linear-gradient(112.45deg, #0995E3 0%, rgba(9, 149, 227, 0.2) 100%) no-repeat;
+    border-radius: 20px;
+}
