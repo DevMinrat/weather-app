@@ -12,11 +12,63 @@
 <body>
 
 
-  <main class="main">
-    <section class="today">
 
+
+  <main class="main">
+    <label class="search-wrapper" for="search">
+      <input class="search" type="text" id="search">
+    </label>
+
+    <section class="today">
+      <h2 class="sity">Minsk</h2>
+      <div class="data">
+        <div class="data__item">
+          <p class="data__item-title">Wind:</p>
+          <div class="data__item-content item-content">
+            <img class="item-content__img" src="/images/wind-icon.png" alt="">
+            <p class="item-content__text">12km/h</p>
+          </div>
+        </div>
+        <div class="data__item">
+          <p class="data__item-title">Humidity:</p>
+          <div class="data__item-content item-content">
+            <img class="item-content__img" src="/images/humidity-icon.png" alt="">
+            <p class="item-content__text">30%</p>
+          </div>
+        </div>
+        <div class="data__item">
+          <p class="data__item-title">Sunrise:</p>
+          <div class="data__item-content item-content">
+            <img class="item-content__img" src="/images/sunrise-icon.png" alt="">
+            <p class="item-content__text">4:35</p>
+          </div>
+        </div>
+        <div class="data__item">
+          <p class="data__item-title">Sunset:</p>
+          <div class="data__item-content item-content">
+            <img class="item-content__img" src="images/sunset-icon.png" alt="">
+            <p class="item-content__text">23:15</p>
+          </div>
+        </div>
+        <div class="data__item">
+          <p class="data__item-title">Rain:</p>
+          <div class="data__item-content item-content">
+            <img class="item-content__img" src="images/rain-icon.png" alt="">
+            <p class="item-content__text">2mm</p>
+          </div>
+        </div>
+        <div class="data__item">
+          <p class="data__item-title">Snow:</p>
+          <div class="data__item-content item-content">
+            <img class="item-content__img" src="images/snow-icon.png" alt="">
+            <p class="item-content__text">2mm</p>
+          </div>
+        </div>
+      </div>
     </section>
-    <div class="week"></div>
+    <div class="week">
+
+    </div>
   </main>
 
   <script src="app.js"></script>
