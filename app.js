@@ -25,7 +25,7 @@ const humidityData = document.querySelector("#humidity");
 const sunriseData = document.querySelector("#sunrise");
 const sunsetData = document.querySelector("#sunset");
 const rainData = document.querySelector("#rain");
-const snowData = document.querySelector("#rain");
+const snowData = document.querySelector("#snow");
 const form = document.forms.weatherControls;
 const searchInput = form.elements.search;
 
@@ -58,7 +58,7 @@ const weatherService = (function () {
   const apiKey = "9fcc82b3417048f0f7b58aa6dc1ad2b3";
 
   return {
-    currentWeather(sity = "Minsk", cb) {
+    currentWeather(sity, cb) {
       http.get(
         `http://api.openweathermap.org/data/2.5/weather?q=${sity}&appid=${apiKey}&units=metric&lang=en`,
         cb
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadWeather() {
-  let sity = searchInput.value || "Мядель";
+  let sity = searchInput.value || "Минск";
 
   weatherService.currentWeather(sity, onGetResponse);
 }
@@ -99,6 +99,14 @@ function renderWeather(
   setTempAverage(response, tempAverage);
   setTempRange(response, tempRangeFrom, tempRangeTo);
   setWeatherDescr(response, weatherDescr);
+  setWindData(response, windData);
+  setHumidData(response, humidityData);
+  setRainData(response, rainData);
+  setSnowData(response, snowData);
+
+  setDayDate(response, dayDate);
+  setSunrise(response, sunriseData);
+  setSunset(response, sunsetData);
 
   addWeatherImg(sun, weatherIconBox);
 }
@@ -122,4 +130,62 @@ function setTempRange(res, tempFrom, tempTo) {
 
 function setWeatherDescr(res, wthDescr) {
   wthDescr.textContent = res.weather[0].description;
+}
+
+function setWindData(res, windData) {
+  windData.textContent = Math.round(res.wind.speed);
+}
+
+function setHumidData(res, humidData) {
+  humidData.textContent = res.main.humidity;
+}
+
+function setRainData(res, rainData) {
+  if (res.rain !== undefined) {
+    rainData.textContent = res.rain["1h"].toFixed(1);
+  } else {
+    rainData.textContent = 0;
+  }
+}
+
+function setSnowData(res, snowData) {
+  if (res.snow !== undefined) {
+    snowData.textContent = res.snow["1h"];
+  } else {
+    snowData.textContent = 0;
+  }
+}
+
+function setDayDate(res, dayDate) {
+  const d = new Date(res.dt * 1000);
+
+  const day = ("0" + d.getDate()).slice(-2);
+  const month = ("0" + (d.getMonth() + 1)).slice(-2);
+  const year = d.getFullYear();
+
+  const timeStamp = `${day}/${month}/${year}`;
+
+  dayDate.textContent = timeStamp;
+}
+
+function setSunrise(res, sunriseData) {
+  const d = new Date((res.sys.sunrise + res.timezone) * 1000);
+
+  const hours = d.getUTCHours();
+  const minuts = ("0" + d.getUTCMinutes()).slice(-2);
+
+  const time = `${hours}:${minuts}`;
+
+  sunriseData.textContent = time;
+}
+
+function setSunset(res, sunsetData) {
+  const d = new Date((res.sys.sunset + res.timezone) * 1000);
+
+  const hours = d.getUTCHours();
+  const minuts = ("0" + d.getUTCMinutes()).slice(-2);
+
+  const time = `${hours}:${minuts}`;
+
+  sunsetData.textContent = time;
 }
