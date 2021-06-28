@@ -1,9 +1,9 @@
 const images = {
   sun: '<div class="weather-icon__wrapper--sun roll-in-right"><img class="weather-icon__img _sun" src="/images/sun.png" alt=""></div>',
   cloud:
-    '<div class="weather-icon__wrapper--cloud slide-in-left"><img class="weather-icon__img _cloud-white" src="/images/cloud-white.png" alt=""><img class="weather-icon__img _cloud-dark" src="/images/cloud-dark.png" alt=""></div>',
-  clouds:
     '<div class="weather-icon__wrapper--cloud slide-in-left"><img class="weather-icon__img _cloud-white" src="/images/cloud-white.png" alt=""></div>',
+  clouds:
+    '<div class="weather-icon__wrapper--cloud slide-in-left"><img class="weather-icon__img _cloud-white" src="/images/cloud-white.png" alt=""><img class="weather-icon__img _cloud-dark" src="/images/cloud-dark.png" alt=""></div>',
   lighting:
     '<div class="weather-icon__wrapper--lighting slide-in-left"><img class="weather-icon__img _lighting" src="/images/lighting.png" alt=""></div>',
   wind: '<div class="weather-icon__wrapper--wind slide-in-right"><img class="weather-icon__img _wind" src="/images/wind.png" alt=""></div>',
@@ -11,22 +11,23 @@ const images = {
   snow: '<div class="weather-icon__wrapper--snow slide-in-left"><img class="weather-icon__img _snowflake-1" src="/images/snowflake.png" alt=""><img class="weather-icon__img _snowflake-2" src="/images/snowflake.png" alt=""><img class="weather-icon__img _snowflake-3" src="/images/snowflake.png" alt=""></div>',
 };
 
-// Elements
-const search = document.querySelector("#search");
+//elements
 const weatherIconBox = document.querySelector(".weather-icon");
-const sity = document.querySelector(".sity");
+const sityName = document.querySelector(".sity");
 const dayName = document.querySelector(".day__name");
 const dayDate = document.querySelector(".day__date");
 const tempAverage = document.querySelector(".temperature__average");
 const tempRangeFrom = document.querySelector(".range-from");
 const tempRangeTo = document.querySelector(".range-to");
 const weatherDescr = document.querySelector(".weather-descr");
-const wind = document.querySelector("#wind");
-const humidity = document.querySelector("#humidity");
-const sunrise = document.querySelector("#sunrise");
-const sunset = document.querySelector("#sunset");
-const rain = document.querySelector("#rain");
-const snow = document.querySelector("#rain");
+const windData = document.querySelector("#wind");
+const humidityData = document.querySelector("#humidity");
+const sunriseData = document.querySelector("#sunrise");
+const sunsetData = document.querySelector("#sunset");
+const rainData = document.querySelector("#rain");
+const snowData = document.querySelector("#rain");
+const form = document.forms.weatherControls;
+const searchInput = form.elements.search;
 
 function customHttp() {
   return {
@@ -57,37 +58,68 @@ const weatherService = (function () {
   const apiKey = "9fcc82b3417048f0f7b58aa6dc1ad2b3";
 
   return {
-    currentWeather(sity, cb) {
+    currentWeather(sity = "Minsk", cb) {
       http.get(
-        `http://api.openweathermap.org/data/2.5/weather?q=${sity}&appid=${apiKey}&units=metric&lang=ru`,
+        `http://api.openweathermap.org/data/2.5/weather?q=${sity}&appid=${apiKey}&units=metric&lang=en`,
         cb
       );
     },
   };
 })();
 
-// events
-loadWeather();
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  loadWeather();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadWeather();
+});
 
 function loadWeather() {
-  weatherService.currentWeather("Мядель", onGetResponse);
+  let sity = searchInput.value || "Мядель";
+
+  weatherService.currentWeather(sity, onGetResponse);
 }
 
 function onGetResponse(err, res) {
   if (err) {
-    alert(err, "error-msg");
+    console.log(err, "error-msg");
     return;
   }
-
   console.log(res);
-
-  renderWeather(res.main);
+  renderWeather(res, images);
 }
 
-function renderWeather(response) {
-  tempAverage.textContent = Math.round(response.temp);
+function renderWeather(
+  response,
+  { sun, cloud, clouds, lighting, wind, rain, snow }
+) {
+  setSityName(response, sityName);
+  setTempAverage(response, tempAverage);
+  setTempRange(response, tempRangeFrom, tempRangeTo);
+  setWeatherDescr(response, weatherDescr);
 
-  console.log(Math.round(response.temp));
+  addWeatherImg(sun, weatherIconBox);
 }
 
-weatherIconBox.insertAdjacentHTML("beforeend", images.sun);
+function addWeatherImg(img, wthIconBox) {
+  wthIconBox.insertAdjacentHTML("beforeend", img);
+}
+
+function setSityName(res, sity) {
+  sity.textContent = res.name;
+}
+
+function setTempAverage(res, tempAver) {
+  tempAver.textContent = Math.round(res.main.temp);
+}
+
+function setTempRange(res, tempFrom, tempTo) {
+  tempFrom.textContent = Math.floor(res.main.temp_min);
+  tempTo.textContent = Math.ceil(res.main.temp_max);
+}
+
+function setWeatherDescr(res, wthDescr) {
+  wthDescr.textContent = res.weather[0].description;
+}
