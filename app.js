@@ -11,6 +11,7 @@ const images = {
   snow: '<div class="weather-icon__wrapper--snow slide-in-left"><img class="weather-icon__img _snowflake-1" src="/images/snowflake.png" alt=""><img class="weather-icon__img _snowflake-2" src="/images/snowflake.png" alt=""><img class="weather-icon__img _snowflake-3" src="/images/snowflake.png" alt=""></div>',
 };
 
+// Elements
 const search = document.querySelector("#search");
 const weatherIconBox = document.querySelector(".weather-icon");
 const sity = document.querySelector(".sity");
@@ -27,25 +28,66 @@ const sunset = document.querySelector("#sunset");
 const rain = document.querySelector("#rain");
 const snow = document.querySelector("#rain");
 
-function getWeather(cb) {
-  const xhr = new XMLHttpRequest();
+function customHttp() {
+  return {
+    get(url, cb) {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", url);
+      xhr.addEventListener("load", () => {
+        if (Math.floor(xhr.status / 100) !== 2) {
+          cb(`Error. Status code: ${xhr.status}`, xhr);
+          return;
+        }
+        const response = JSON.parse(xhr.responseText);
+        cb(null, response);
+      });
 
-  xhr.open(
-    "GET",
-    "http://api.openweathermap.org/data/2.5/weather?q=Мядель&appid=9fcc82b3417048f0f7b58aa6dc1ad2b3&units=metric&lang=ru"
-  );
-  xhr.addEventListener("load", () => {
-    const response = JSON.parse(xhr.responseText);
-    cb(response);
-  });
+      xhr.addEventListener("error", () => {
+        cb(`Error. Status code: ${xhr.status}`, xhr);
+      });
 
-  xhr.send();
+      xhr.send();
+    },
+  };
 }
 
-getWeather((response) => {
-  tempAverage.textContent = Math.round(response.main.temp);
+const http = customHttp();
 
-  console.log(Math.round(response.main.temp));
-});
+const weatherService = (function () {
+  const apiKey = "9fcc82b3417048f0f7b58aa6dc1ad2b3";
+
+  return {
+    currentWeather(sity, cb) {
+      http.get(
+        `http://api.openweathermap.org/data/2.5/weather?q=${sity}&appid=${apiKey}&units=metric&lang=ru`,
+        cb
+      );
+    },
+  };
+})();
+
+// events
+loadWeather();
+
+function loadWeather() {
+  weatherService.currentWeather("Мядель", onGetResponse);
+}
+
+function onGetResponse(err, res) {
+  if (err) {
+    alert(err, "error-msg");
+    return;
+  }
+
+  console.log(res);
+
+  renderWeather(res.main);
+}
+
+function renderWeather(response) {
+  tempAverage.textContent = Math.round(response.temp);
+
+  console.log(Math.round(response.temp));
+}
 
 weatherIconBox.insertAdjacentHTML("beforeend", images.sun);
