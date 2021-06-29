@@ -183,7 +183,7 @@ body {
 
   display: grid;
   grid-template:
-    "sity sity sity"
+    "city city city"
     "day temperature ."
     "wd wd wd"
     "data data data" / 1fr 2fr 1fr;
@@ -206,8 +206,8 @@ body {
   border-radius: 20px;
 }
 
-.sity {
-  grid-area: sity;
+.city {
+  grid-area: city;
 
   font-family: inherit;
   font-size: 70px;

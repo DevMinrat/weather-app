@@ -11,9 +11,19 @@ const images = {
   snow: '<div class="weather-icon__wrapper--snow slide-in-left"><img class="weather-icon__img _snowflake-1" src="/images/snowflake.png" alt=""><img class="weather-icon__img _snowflake-2" src="/images/snowflake.png" alt=""><img class="weather-icon__img _snowflake-3" src="/images/snowflake.png" alt=""></div>',
 };
 
+const week = [
+  { full: "Sunday", abb: "SUN" },
+  { full: "Monday", abb: "MON" },
+  { full: "Tuesday", abb: "TUE" },
+  { full: "Wednesday", abb: "WED" },
+  { full: "Thursday", abb: "THU" },
+  { full: "Friday", abb: "FIR" },
+  { full: "Saturday", abb: "SAT" },
+];
+
 //elements
 const weatherIconBox = document.querySelector(".weather-icon");
-const sityName = document.querySelector(".sity");
+const sityName = document.querySelector(".city");
 const dayName = document.querySelector(".day__name");
 const dayDate = document.querySelector(".day__date");
 const tempAverage = document.querySelector(".temperature__average");
@@ -28,6 +38,8 @@ const rainData = document.querySelector("#rain");
 const snowData = document.querySelector("#snow");
 const form = document.forms.weatherControls;
 const searchInput = form.elements.search;
+const weekTempList = document.querySelectorAll(".week__temp");
+const weekDayName = document.querySelectorAll(".week__item-day");
 
 function customHttp() {
   return {
@@ -40,7 +52,7 @@ function customHttp() {
           return;
         }
         const response = JSON.parse(xhr.responseText);
-        cb(null, response);
+        cb(response);
       });
 
       xhr.addEventListener("error", () => {
@@ -54,13 +66,19 @@ function customHttp() {
 
 const http = customHttp();
 
-const weatherService = (function () {
+const weatherServiceCurent = (function () {
   const apiKey = "9fcc82b3417048f0f7b58aa6dc1ad2b3";
 
   return {
-    currentWeather(sity, cb) {
+    currentWeather(city, cb) {
       http.get(
-        `http://api.openweathermap.org/data/2.5/weather?q=${sity}&appid=${apiKey}&units=metric&lang=en`,
+        `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=en`,
+        cb
+      );
+    },
+    forecast(lat, lon, cb) {
+      http.get(
+        `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=${apiKey}&units=metric&lang=en`,
         cb
       );
     },
@@ -77,25 +95,34 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadWeather() {
-  let sity = searchInput.value || "Минск";
+  let city = searchInput.value || "Минск";
 
-  weatherService.currentWeather(sity, onGetResponse);
+  weatherServiceCurent.currentWeather(city, onGetResponseCurrent);
+
+  weatherServiceCurent.currentWeather(city, (res) => {
+    weatherServiceCurent.forecast(
+      res.coord.lat,
+      res.coord.lon,
+      onGetResponseForecast
+    );
+  });
 }
 
-function onGetResponse(err, res) {
-  if (err) {
-    console.log(err, "error-msg");
-    return;
-  }
+function onGetResponseCurrent(res) {
   console.log(res);
-  renderWeather(res, images);
+  renderCurrentWeather(res, images);
 }
 
-function renderWeather(
+function onGetResponseForecast(res) {
+  renderForecastWeather(res, images);
+}
+
+function renderCurrentWeather(
   response,
   { sun, cloud, clouds, lighting, wind, rain, snow }
 ) {
   setSityName(response, sityName);
+  setCurDayName(response, dayName);
   setTempAverage(response, tempAverage);
   setTempRange(response, tempRangeFrom, tempRangeTo);
   setWeatherDescr(response, weatherDescr);
@@ -111,12 +138,23 @@ function renderWeather(
   addWeatherImg(sun, weatherIconBox);
 }
 
+function renderForecastWeather(response) {
+  setWeekNameTemp(response, weekTempList, weekDayName);
+}
+
 function addWeatherImg(img, wthIconBox) {
   wthIconBox.insertAdjacentHTML("beforeend", img);
 }
 
-function setSityName(res, sity) {
-  sity.textContent = res.name;
+function setSityName(res, city) {
+  city.textContent = res.name;
+}
+
+function setCurDayName(res, dayName) {
+  const d = new Date(res.dt * 1000);
+  const dayNum = d.getDay();
+
+  dayName.textContent = week[dayNum].full;
 }
 
 function setTempAverage(res, tempAver) {
@@ -188,4 +226,16 @@ function setSunset(res, sunsetData) {
   const time = `${hours}:${minuts}`;
 
   sunsetData.textContent = time;
+}
+
+function setWeekNameTemp(res, weekList, weekDay) {
+  let dayTemp = res.daily;
+  console.log(dayTemp);
+  weekList.forEach((dayItem, ind) => {
+    const d = new Date(dayTemp[ind + 1].dt * 1000);
+    const dayNum = d.getDay();
+
+    weekDay[ind].textContent = week[dayNum].abb;
+    dayItem.textContent = Math.round(dayTemp[ind + 1].temp.day);
+  });
 }
