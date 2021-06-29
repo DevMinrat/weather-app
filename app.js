@@ -86,8 +86,20 @@ const weatherServiceCurent = (function () {
 })();
 
 form.addEventListener("submit", (e) => {
+  if (!searchInput.value) {
+    console.log(1);
+    return;
+  }
   e.preventDefault();
   loadWeather();
+});
+
+searchInput.addEventListener("input", () => {
+  if (searchInput.value.length > 0) {
+    searchInput.style.maxWidth = "300px";
+  } else if (searchInput.value.length === 0) {
+    searchInput.style.maxWidth = "";
+  }
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -230,7 +242,6 @@ function setSunset(res, sunsetData) {
 
 function setWeekNameTemp(res, weekList, weekDay) {
   let dayTemp = res.daily;
-  console.log(dayTemp);
   weekList.forEach((dayItem, ind) => {
     const d = new Date(dayTemp[ind + 1].dt * 1000);
     const dayNum = d.getDay();
