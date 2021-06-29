@@ -48,15 +48,11 @@ function customHttp() {
       xhr.open("GET", url);
       xhr.addEventListener("load", () => {
         if (Math.floor(xhr.status / 100) !== 2) {
-          cb(`Error. Status code: ${xhr.status}`, xhr);
+          cb("The city doesn`t exist. Check the city name or choose another");
           return;
         }
         const response = JSON.parse(xhr.responseText);
-        cb(response);
-      });
-
-      xhr.addEventListener("error", () => {
-        cb(`Error. Status code: ${xhr.status}`, xhr);
+        cb(null, response);
       });
 
       xhr.send();
@@ -86,11 +82,11 @@ const weatherServiceCurent = (function () {
 })();
 
 form.addEventListener("submit", (e) => {
+  e.preventDefault();
   if (!searchInput.value) {
-    console.log(1);
     return;
   }
-  e.preventDefault();
+
   loadWeather();
 });
 
@@ -110,8 +106,10 @@ function loadWeather() {
   let city = searchInput.value || "Минск";
 
   weatherServiceCurent.currentWeather(city, onGetResponseCurrent);
-
-  weatherServiceCurent.currentWeather(city, (res) => {
+  weatherServiceCurent.currentWeather(city, (err, res) => {
+    if (err) {
+      return;
+    }
     weatherServiceCurent.forecast(
       res.coord.lat,
       res.coord.lon,
@@ -120,12 +118,18 @@ function loadWeather() {
   });
 }
 
-function onGetResponseCurrent(res) {
+function onGetResponseCurrent(err, res) {
   console.log(res);
+
+  if (err) {
+    alert(err);
+    return;
+  }
+
   renderCurrentWeather(res, images);
 }
 
-function onGetResponseForecast(res) {
+function onGetResponseForecast(err, res) {
   renderForecastWeather(res, images);
 }
 
@@ -147,15 +151,12 @@ function renderCurrentWeather(
   setSunrise(response, sunriseData);
   setSunset(response, sunsetData);
 
-  addWeatherImg(sun, weatherIconBox);
+  checkClouds(response, images, weatherIconBox);
+  checkRain(response, images, weatherIconBox);
 }
 
 function renderForecastWeather(response) {
   setWeekNameTemp(response, weekTempList, weekDayName);
-}
-
-function addWeatherImg(img, wthIconBox) {
-  wthIconBox.insertAdjacentHTML("beforeend", img);
 }
 
 function setSityName(res, city) {
@@ -249,4 +250,43 @@ function setWeekNameTemp(res, weekList, weekDay) {
     weekDay[ind].textContent = week[dayNum].abb;
     dayItem.textContent = Math.round(dayTemp[ind + 1].temp.day);
   });
+}
+
+function setWeatherIcons(params) {}
+
+function checkClouds(res, img, wthIconBox) {
+  const cloudsPerc = res.clouds.all;
+  console.log(cloudsPerc);
+
+  wthIconBox.innerHTML = "";
+
+  if (cloudsPerc < 11) {
+    wthIconBox.innerHTML = "";
+    wthIconBox.insertAdjacentHTML("beforeend", img.sun);
+  }
+
+  if (cloudsPerc >= 11 && cloudsPerc <= 25) {
+    wthIconBox.innerHTML = "";
+    wthIconBox.insertAdjacentHTML("beforeend", img.sun);
+    wthIconBox.insertAdjacentHTML("beforeend", img.cloud);
+  }
+
+  if (cloudsPerc >= 26 && cloudsPerc <= 50) {
+    wthIconBox.innerHTML = "";
+    wthIconBox.insertAdjacentHTML("beforeend", img.cloud);
+  }
+
+  if (cloudsPerc > 51) {
+    wthIconBox.innerHTML = "";
+    wthIconBox.insertAdjacentHTML("beforeend", img.clouds);
+  }
+}
+
+function checkRain(res, img, wthIconBox) {
+  const rainMm = res.rain["1h"];
+  console.log(rainMm);
+
+  if (rainMm > 0) {
+    wthIconBox.insertAdjacentHTML("beforeend", img.rain);
+  }
 }
