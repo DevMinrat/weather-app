@@ -119,12 +119,12 @@ function loadWeather() {
 }
 
 function onGetResponseCurrent(err, res) {
-  console.log(res);
-
   if (err) {
     alert(err);
     return;
   }
+
+  console.log(res);
 
   renderCurrentWeather(res, images);
 }
@@ -151,8 +151,17 @@ function renderCurrentWeather(
   setSunrise(response, sunriseData);
   setSunset(response, sunsetData);
 
-  checkClouds(response, images, weatherIconBox);
-  checkRain(response, images, weatherIconBox);
+  setWeatherIcons(
+    response,
+    sun,
+    cloud,
+    clouds,
+    lighting,
+    wind,
+    rain,
+    snow,
+    weatherIconBox
+  );
 }
 
 function renderForecastWeather(response) {
@@ -252,41 +261,66 @@ function setWeekNameTemp(res, weekList, weekDay) {
   });
 }
 
-function setWeatherIcons(params) {}
-
-function checkClouds(res, img, wthIconBox) {
-  const cloudsPerc = res.clouds.all;
-  console.log(cloudsPerc);
-
+function setWeatherIcons(
+  res,
+  sun,
+  cloud,
+  clouds,
+  lighting,
+  wind,
+  rain,
+  snow,
+  wthIconBox
+) {
   wthIconBox.innerHTML = "";
 
+  checkClouds(res, sun, cloud, clouds, wthIconBox);
+  checkThunderstorm(res, clouds, lighting, wthIconBox);
+
+  checkWind(res, wind, wthIconBox);
+  checkSnow(res, snow, wthIconBox);
+  checkRain(res, rain, wthIconBox);
+}
+
+function checkClouds(res, sun, cloud, clouds, wthIconBox) {
+  const cloudsPerc = res.clouds.all;
+
   if (cloudsPerc < 11) {
-    wthIconBox.innerHTML = "";
-    wthIconBox.insertAdjacentHTML("beforeend", img.sun);
-  }
-
-  if (cloudsPerc >= 11 && cloudsPerc <= 25) {
-    wthIconBox.innerHTML = "";
-    wthIconBox.insertAdjacentHTML("beforeend", img.sun);
-    wthIconBox.insertAdjacentHTML("beforeend", img.cloud);
-  }
-
-  if (cloudsPerc >= 26 && cloudsPerc <= 50) {
-    wthIconBox.innerHTML = "";
-    wthIconBox.insertAdjacentHTML("beforeend", img.cloud);
-  }
-
-  if (cloudsPerc > 51) {
-    wthIconBox.innerHTML = "";
-    wthIconBox.insertAdjacentHTML("beforeend", img.clouds);
+    wthIconBox.insertAdjacentHTML("beforeend", sun);
+  } else if (cloudsPerc >= 11 && cloudsPerc <= 25) {
+    wthIconBox.insertAdjacentHTML("beforeend", sun);
+    wthIconBox.insertAdjacentHTML("beforeend", cloud);
+  } else if (cloudsPerc >= 26 && cloudsPerc <= 50) {
+    wthIconBox.insertAdjacentHTML("beforeend", cloud);
+  } else if (cloudsPerc > 51) {
+    wthIconBox.insertAdjacentHTML("beforeend", clouds);
   }
 }
 
-function checkRain(res, img, wthIconBox) {
-  const rainMm = res.rain["1h"];
-  console.log(rainMm);
+function checkThunderstorm(res, clouds, lighting, wthIconBox) {
+  let mainWth = res.weather[0].main;
 
-  if (rainMm > 0) {
-    wthIconBox.insertAdjacentHTML("beforeend", img.rain);
+  if (mainWth.includes("hunderstorm")) {
+    wthIconBox.innerHTML = "";
+    wthIconBox.insertAdjacentHTML("beforeend", clouds);
+    wthIconBox.insertAdjacentHTML("beforeend", lighting);
+  }
+}
+
+function checkRain(res, rain, wthIconBox) {
+  if (res.rain && res.rain["1h"] > 0) {
+    wthIconBox.insertAdjacentHTML("beforeend", rain);
+  }
+}
+
+function checkSnow(res, snow, wthIconBox) {
+  if (res.snow && res.snow["1h"] > 0) {
+    wthIconBox.insertAdjacentHTML("beforeend", snow);
+  }
+}
+
+function checkWind(res, wind, wthIconBox) {
+  if (res.wind.speed > 6) {
+    wthIconBox.insertAdjacentHTML("beforeend", wind);
   }
 }
