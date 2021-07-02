@@ -357,6 +357,8 @@ function setWeekWthIcons(res, img, weekImgbox) {
   const clouds = res.clouds;
   const rain = res.rain;
 
+  weekImgbox.innerHTML = "";
+
   if (lighting) {
     weekImgbox.insertAdjacentHTML("afterbegin", img.lighCloud);
   } else if (lighting && rain > 0) {
