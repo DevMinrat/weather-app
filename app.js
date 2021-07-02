@@ -21,6 +21,19 @@ const week = [
   { full: "Saturday", abb: "SAT" },
 ];
 
+const weekImages = {
+  sun: '<img src="/images/data-icons/sun.png" alt="sun">',
+  sunCloud: '<img src="/images/data-icons/sun-cloud.png" alt="sun cloud">',
+  cloud: '<img src="/images/data-icons/cloud.png" alt="cloud">',
+  rainSunCloud:
+    '<img src="/images/data-icons/rain-sun-cloud.png" alt="rain sun cloud">',
+  rainCloud: '<img src="/images/data-icons/rain-cloud.png" alt="rain cloud">',
+  lighCloud:
+    '<img src="/images/data-icons/ligh-cloud.png" alt="lighting cloud">',
+  lighRainCloud:
+    '<img src="/images/data-icons/ligh-cloud-rain.png" alt="lighting rain cloud">',
+};
+
 //elements
 const weatherIconBox = document.querySelector(".weather-icon");
 const sityName = document.querySelector(".city");
@@ -38,6 +51,7 @@ const rainData = document.querySelector("#rain");
 const snowData = document.querySelector("#snow");
 const form = document.forms.weatherControls;
 const searchInput = form.elements.search;
+const weekIconList = document.querySelectorAll(".week__icon");
 const weekTempList = document.querySelectorAll(".week__temp");
 const weekDayName = document.querySelectorAll(".week__item-day");
 
@@ -165,7 +179,7 @@ function renderCurrentWeather(
 }
 
 function renderForecastWeather(response) {
-  setWeekNameTemp(response, weekTempList, weekDayName);
+  setWeekNameTempIcon(response, weekTempList, weekIconList, weekDayName);
 }
 
 function setSityName(res, city) {
@@ -191,6 +205,8 @@ function setTempRange(res, tempFrom, tempTo) {
 function setWeatherDescr(res, wthDescr) {
   wthDescr.textContent = res.weather[0].description;
 }
+
+// Set Weather Data
 
 function setWindData(res, windData) {
   windData.textContent = Math.round(res.wind.speed);
@@ -250,16 +266,7 @@ function setSunset(res, sunsetData) {
   sunsetData.textContent = time;
 }
 
-function setWeekNameTemp(res, weekList, weekDay) {
-  let dayTemp = res.daily;
-  weekList.forEach((dayItem, ind) => {
-    const d = new Date(dayTemp[ind + 1].dt * 1000);
-    const dayNum = d.getDay();
-
-    weekDay[ind].textContent = week[dayNum].abb;
-    dayItem.textContent = Math.round(dayTemp[ind + 1].temp.day);
-  });
-}
+// Set today weather icons
 
 function setWeatherIcons(
   res,
@@ -322,5 +329,51 @@ function checkSnow(res, snow, wthIconBox) {
 function checkWind(res, wind, wthIconBox) {
   if (res.wind.speed > 6) {
     wthIconBox.insertAdjacentHTML("beforeend", wind);
+  }
+}
+
+// Set name and temp on day of the week
+
+function setWeekNameTempIcon(res, weekList, weekIconList, weekDay) {
+  let dayTemp = res.daily;
+
+  weekList.forEach((dayItem, ind) => {
+    const d = new Date(dayTemp[ind + 1].dt * 1000);
+    const dayNum = d.getDay();
+
+    weekDay[ind].textContent = week[dayNum].abb;
+    dayItem.textContent = Math.round(dayTemp[ind + 1].temp.day);
+  });
+
+  weekIconList.forEach((item, ind) => {
+    setWeekWthIcons(dayTemp[ind + 1], weekImages, item);
+  });
+}
+
+// set week weather icons
+
+function setWeekWthIcons(res, img, weekImgbox) {
+  const lighting = res.weather[0].main.includes("hunderstorm");
+  const clouds = res.clouds;
+  const rain = res.rain;
+
+  if (lighting) {
+    weekImgbox.insertAdjacentHTML("afterbegin", img.lighCloud);
+  } else if (lighting && rain > 0) {
+    weekImgbox.insertAdjacentHTML("afterbegin", img.lighRainCloud);
+  }
+
+  if (clouds <= 25 && !rain) {
+    weekImgbox.insertAdjacentHTML("afterbegin", img.sun);
+  } else if (clouds > 26 && clouds < 60 && !rain) {
+    weekImgbox.insertAdjacentHTML("afterbegin", img.sunCloud);
+  } else if (clouds > 60 && !rain) {
+    weekImgbox.insertAdjacentHTML("afterbegin", img.cloud);
+  }
+
+  if (rain && rain > 0 && clouds < 50) {
+    weekImgbox.insertAdjacentHTML("afterbegin", img.rainSunCloud);
+  } else if (rain && rain > 0 && clouds > 50) {
+    weekImgbox.insertAdjacentHTML("afterbegin", img.rainCloud);
   }
 }
