@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/style.min.css">
+  <title>Weather</title>
+</head>
+
+<body>
+  <div class="page">
+    <main class="main">
+      <form class="weatherForm" action="#" id="weatherControls">
+        <label class="search-wrapper" for="search">
+          <input class="search" type="text" id="search" value="" placeholder="Minsk" autocomplete="off" required>
+        </label>
+        <button class="search__btn" type="submit"></button>
+      </form>
+      <section class="today">
+        <h2 class="city"></h2>
+        <div class="day">
+          <p class="day__name"></p>
+          <p class="day__date"></p>
+        </div>
+        <div class="temperature">
+          <p class="temperature__average cels"></p>
+          <p class="temperature__range"><span class="range-from cels"></span> - <span class="range-to cels"></span>
+          </p>
+        </div>
+        <p class="weather-descr"></p>
+        <div class="weather-icon"></div>
+        <div class="data">
+          <div class="data__item">
+            <p class="data__item-title">Wind:</p>
+            <div class="data__item-content item-content">
+              <img class="item-content__img" src="assets/images/wind-icon.png" alt="">
+              <p class="item-content__text" id="wind"></p>m/s
+            </div>
+          </div>
+          <div class="data__item">
+            <p class="data__item-title">Humidity:</p>
+            <div class="data__item-content item-content">
+              <img class="item-content__img" src="assets/images/humidity-icon.png" alt="">
+              <p class="item-content__text" id="humidity"></p>%
+            </div>
+          </div>
+          <div class="data__item">
+            <p class="data__item-title">Sunrise:</p>
+            <div class="data__item-content item-content">
+              <img class="item-content__img" src="assets/images/sunrise-icon.png" alt="">
+              <p class="item-content__text" id="sunrise"></p>
+            </div>
+          </div>
+          <div class="data__item">
+            <p class="data__item-title">Sunset:</p>
+            <div class="data__item-content item-content">
+              <img class="item-content__img" src="assets/images/sunset-icon.png" alt="">
+              <p class="item-content__text" id="sunset"></p>
+            </div>
+          </div>
+          <div class="data__item">
+            <p class="data__item-title">Rain:</p>
+            <div class="data__item-content item-content">
+              <img class="item-content__img" src="assets/images/rain-icon.png" alt="">
+              <p class="item-content__text" id="rain"></p>mm
+            </div>
+          </div>
+          <div class="data__item">
+            <p class="data__item-title">Snow:</p>
+            <div class="data__item-content item-content">
+              <img class="item-content__img" src="assets/images/snow-icon.png" alt="">
+              <p class="item-content__text" id="snow"></p>mm
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="week">
+        <div class="week__item">
+          <p class="week__item-day"></p>
+          <div class="week__icon"></div>
+          <div class="week__temp cels"></div>
+        </div>
+        <div class="week__item">
+          <p class="week__item-day"></p>
+          <div class="week__icon"></div>
+          <div class="week__temp cels"></div>
+        </div>
+        <div class="week__item">
+          <p class="week__item-day"></p>
+          <div class="week__icon"></div>
+          <div class="week__temp cels"></div>
+        </div>
+        <div class="week__item">
+          <p class="week__item-day"></p>
+          <div class="week__icon"></div>
+          <div class="week__temp cels"></div>
+        </div>
+        <div class="week__item">
+          <p class="week__item-day"></p>
+          <div class="week__icon"></div>
+          <div class="week__temp cels"></div>
+        </div>
+        <div class="week__item">
+          <p class="week__item-day"></p>
+          <div class="week__icon"></div>
+          <div class="week__temp cels"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/app.min.js"></script>
+</body>
+
+</html>
