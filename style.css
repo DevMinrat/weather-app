@@ -117,7 +117,7 @@ body {
 }
 
 .page {
-  overflow: hidden;
+  overflow-x: hidden;
 
   height: 100vh;
 
@@ -129,6 +129,7 @@ body {
   max-width: 840px;
 
   margin: 50px auto 0;
+  padding: 10px;
 }
 
 .weatherForm {
@@ -205,7 +206,7 @@ body {
 
   display: grid;
   grid-template:
-    "city city city"
+    "city city wthIcon"
     "day temperature ."
     "wd wd wd"
     "data data data" / 1fr 2fr 1fr;
@@ -228,11 +229,39 @@ body {
   border-radius: 20px;
 }
 
+@media (max-width: 768px) {
+  .today {
+    position: relative;
+
+    display: grid;
+    grid-template:
+      "city city ."
+      "day day wthIcon"
+      ". temperature ."
+      "wd wd wd"
+      "data data data" / 1fr 2fr 1fr;
+
+    grid-row-gap: 10px;
+  }
+}
+
+@media (max-width: 575px) {
+  .today {
+    padding: 30px 20px 20px 20px;
+  }
+}
+
 .city {
   grid-area: city;
 
   font-family: inherit;
-  font-size: 70px;
+  font-size: 55px;
+}
+
+@media (max-width: 575px) {
+  .city {
+    font-size: 42px;
+  }
 }
 
 .day {
@@ -240,6 +269,20 @@ body {
   max-width: 200px;
 
   margin-top: 10px;
+}
+
+@media (max-width: 575px) {
+  .day {
+    margin-top: 0;
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 375px) {
+  .day {
+    margin-top: 0;
+    margin-bottom: 60px;
+  }
 }
 
 .day__name {
@@ -262,11 +305,23 @@ body {
   text-align: center;
 }
 
+@media (max-width: 575px) {
+  .temperature__average {
+    font-size: 92px;
+  }
+}
+
 .temperature__range {
   position: relative;
 
   font-size: 30px;
   text-align: center;
+}
+
+@media (max-width: 575px) {
+  .temperature__range {
+    font-size: 20px;
+  }
 }
 
 .range-from {
@@ -276,21 +331,47 @@ body {
 .weather-descr {
   grid-area: wd;
 
-  font-size: 72px;
+  font-size: 55px;
   text-align: center;
   text-transform: capitalize;
 }
 
+@media (max-width: 768px) {
+  .weather-descr {
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 575px) {
+  .weather-descr {
+    font-size: 36px;
+  }
+}
+
 .weather-icon {
+  grid-area: wthIcon;
+
   position: relative;
   right: 0px;
-  top: -125px;
+  top: -80%;
   z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .weather-icon {
+    top: 0;
+  }
 }
 
 .weather-icon__img {
   position: absolute;
-  right: -100px;
+  right: -50%;
+}
+
+@media (max-width: 768px) {
+  .weather-icon__img {
+    right: 0;
+  }
 }
 
 .data {
@@ -299,16 +380,35 @@ body {
   display: flex;
   justify-content: space-between;
   align-self: flex-end;
+  flex-wrap: wrap;
 
   width: 100%;
   max-width: 780px;
-  height: 105px;
 
   padding: 26px 20px;
   margin: 0 auto;
 
   background: rgba(0, 67, 167, 0.3);
   border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+  .data {
+    grid-row-gap: 15px;
+    padding: 15px 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .data__item {
+    flex-basis: 33.3333%;
+  }
+}
+
+@media (max-width: 425px) {
+  .data__item {
+    flex-basis: 50%;
+  }
 }
 
 .data__item-title {
@@ -319,6 +419,12 @@ body {
 .data__item-content {
   display: flex;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .data__item-content {
+    justify-content: center;
+  }
 }
 
 .item-content__img {
@@ -332,7 +438,6 @@ body {
 
   width: 100%;
   max-width: 840px;
-  height: 205px;
 
   padding: 35px 30px 30px;
 
@@ -345,13 +450,43 @@ body {
   border-radius: 20px;
 }
 
+@media (max-width: 768px) {
+  .week {
+    flex-wrap: wrap;
+    grid-row-gap: 20px;
+    padding: 25px 20px 20px;
+  }
+}
+
+@media (max-width: 575px) {
+  .week {
+  }
+}
+
 .week__item {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
 
+  padding: 10px 20px;
+
   font-size: 24px;
+
+  background: #148adc40;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .week__item {
+    flex-basis: 30%;
+  }
+}
+
+@media (max-width: 425px) {
+  .week__item {
+    flex-basis: 45%;
+  }
 }
 
 .week__item-day {
@@ -430,6 +565,20 @@ body {
   animation: sun 60s linear infinite normal;
 }
 
+@media (max-width: 768px) {
+  ._sun {
+    top: -95px;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 575px) {
+  ._sun {
+    top: 10px;
+    max-width: 100px;
+  }
+}
+
 @keyframes sun {
   0% {
     transform: rotate(0);
@@ -451,12 +600,46 @@ body {
   animation: cloud 7s linear infinite alternate;
 }
 
+@media (max-width: 768px) {
+  ._cloud-white {
+    max-width: 200px;
+    top: -35px;
+
+    animation: cloud768 7s linear infinite alternate;
+  }
+}
+
+@media (max-width: 575px) {
+  ._cloud-white {
+    max-width: 100px;
+    top: 50px;
+  }
+}
+
 ._cloud-dark {
   top: -20px;
-  right: -155px;
+  right: -70%;
   z-index: 21;
 
   animation: cloud 7s linear infinite alternate;
+}
+
+@media (max-width: 768px) {
+  ._cloud-dark {
+    top: -40px;
+    right: -20px;
+    max-width: 200px;
+
+    animation: cloud768 7s linear infinite alternate;
+  }
+}
+
+@media (max-width: 575px) {
+  ._cloud-dark {
+    top: 45px;
+    right: -10%;
+    max-width: 100px;
+  }
 }
 
 @keyframes cloud {
@@ -471,6 +654,18 @@ body {
   }
 }
 
+@keyframes cloud768 {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-20px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
 .weather-icon__wrapper--lighting {
   position: relative;
   z-index: 11;
@@ -478,9 +673,29 @@ body {
 
 ._lighting {
   top: 100px;
-  right: -15px;
+  right: -20%;
   z-index: 11;
+
   animation: lighting 2.5s linear infinite alternate;
+}
+
+@media (max-width: 768px) {
+  ._lighting {
+    max-width: 40px;
+    top: 55px;
+    right: 35px;
+
+    animation: lighting768 2.5s linear infinite alternate;
+  }
+}
+
+@media (max-width: 575px) {
+  ._lighting {
+    max-width: 20px;
+    right: 35px;
+
+    animation: lighting768 2.5s linear infinite alternate;
+  }
 }
 
 @keyframes lighting {
@@ -490,6 +705,16 @@ body {
 
   100% {
     transform: skew(-10deg, -20deg) translate(-30px, 40px);
+  }
+}
+
+@keyframes lighting768 {
+  0% {
+    transform: skew(0, 0) translate(0, 0);
+  }
+
+  100% {
+    transform: skew(-10deg, -20deg) translate(-15px, 20px);
   }
 }
 
@@ -507,6 +732,24 @@ body {
   animation: wind 2.5s ease-in infinite alternate;
 }
 
+@media (max-width: 768px) {
+  ._wind {
+    top: 60px;
+    max-width: 150px;
+
+    animation: wind768 2.5s ease-in infinite alternate;
+  }
+}
+
+@media (max-width: 575px) {
+  ._wind {
+    top: 100px;
+    max-width: 50px;
+
+    animation: wind768 2.5s ease-in infinite alternate;
+  }
+}
+
 @keyframes wind {
   0% {
     transform: skewX(0) translateX(0);
@@ -516,6 +759,18 @@ body {
   }
   100% {
     transform: skewX(30deg) translateX(20px);
+  }
+}
+
+@keyframes wind768 {
+  0% {
+    transform: skewX(0) translateX(0);
+  }
+  50% {
+    transform: skewX(15deg) translateX(-30px);
+  }
+  100% {
+    transform: skewX(30deg) translateX(-10px);
   }
 }
 
@@ -532,7 +787,7 @@ body {
 }
 
 ._drop-1 {
-  top: 100px;
+  top: 150px;
   right: 150px;
 
   animation-duration: 1.7s;
@@ -540,14 +795,79 @@ body {
 
 ._drop-2 {
   top: 130px;
-  right: 90px;
+  right: 80px;
 }
 
 ._drop-3 {
   top: 150px;
-  right: 140px;
+  right: 50px;
 
   animation-duration: 1.9s;
+}
+
+@media (max-width: 768px) {
+  ._drop-1,
+  ._drop-2,
+  ._drop-3 {
+    max-width: 15px;
+    animation: drop768 1.5s linear infinite;
+  }
+
+  ._drop-1 {
+    top: 70px;
+    right: 180px;
+
+    animation-duration: 1.7s;
+  }
+
+  ._drop-2 {
+    top: 70px;
+    right: 135px;
+  }
+
+  ._drop-3 {
+    top: 65px;
+    right: 90px;
+
+    animation-duration: 1.9s;
+  }
+}
+
+@media (max-width: 575px) {
+  ._drop-1,
+  ._drop-2,
+  ._drop-3 {
+    max-width: 15px;
+    animation: drop768 1.5s linear infinite;
+  }
+
+  ._drop-1 {
+    top: 85px;
+    right: 85px;
+
+    animation-duration: 1.7s;
+  }
+
+  ._drop-2 {
+    top: 80px;
+    right: 60px;
+  }
+
+  ._drop-3 {
+    top: 100px;
+    right: 50px;
+
+    animation-duration: 1.9s;
+  }
+}
+
+@media (max-width: 575px) {
+  ._drop-1,
+  ._drop-2,
+  ._drop-3 {
+    max-width: 10px;
+    animation: drop768 1.5s linear infinite;
+  }
 }
 
 @keyframes drop {
@@ -562,6 +882,22 @@ body {
 
   100% {
     transform: skew(-10deg, -10deg) translate(-30px, 70px);
+    opacity: 0;
+  }
+}
+
+@keyframes drop768 {
+  0% {
+    transform: skew(0, 0) translate(0, 0);
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: skew(-10deg, -10deg) translate(-15px, 35px);
     opacity: 0;
   }
 }
@@ -593,12 +929,102 @@ body {
   animation-duration: 1.9s;
 }
 
+@media (max-width: 768px) {
+  ._snowflake-1,
+  ._snowflake-2,
+  ._snowflake-3 {
+    max-width: 15px;
+
+    animation: snowflake768 1.5s linear infinite;
+  }
+
+  ._snowflake-1 {
+    top: 65px;
+    right: 170px;
+
+    animation-duration: 1.7s;
+  }
+
+  ._snowflake-2 {
+    top: 70px;
+    right: 120px;
+  }
+
+  ._snowflake-3 {
+    top: 70px;
+    right: 75px;
+
+    animation-duration: 1.9s;
+  }
+}
+
+@media (max-width: 575px) {
+  ._snowflake-1,
+  ._snowflake-2,
+  ._snowflake-3 {
+    max-width: 15px;
+
+    animation: snowflake768 1.5s linear infinite;
+  }
+
+  ._snowflake-1 {
+    top: 100px;
+    right: 80px;
+
+    animation-duration: 1.7s;
+  }
+
+  ._snowflake-2 {
+    top: 85px;
+    right: 20px;
+  }
+
+  ._snowflake-3 {
+    top: 110px;
+    right: 50px;
+
+    animation-duration: 1.9s;
+  }
+}
+
+@media (max-width: 575px) {
+  ._snowflake-1,
+  ._snowflake-2,
+  ._snowflake-3 {
+    max-width: 10px;
+
+    animation: snowflake768 1.5s linear infinite;
+  }
+}
+
 @keyframes snowflake {
   0% {
     transform: translateY(0);
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 0.7;
   }
 
   100% {
     transform: translateY(170px);
+    opacity: 0;
+  }
+}
+
+@keyframes snowflake768 {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translateY(40px);
+    opacity: 0;
   }
 }
