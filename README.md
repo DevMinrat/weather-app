@@ -24,3 +24,12 @@ ____
 :umbrella: Дождь     
 :snowflake: Снег     
 
+#### Демонстрация работы приложения    
+____    
+
+![image](https://github.com/DevMinrat/weather-app/blob/master/REXxDgGoXb.gif)
+
+#### Ссылки    
+____   
+
+Ссылка на проект
